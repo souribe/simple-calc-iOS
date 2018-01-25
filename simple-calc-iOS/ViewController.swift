@@ -33,6 +33,9 @@ class ViewController: UIViewController {
     var result = ""
     var curOperation : Operation = .Null
     
+    var addCount = 1
+    var addAvg = 0
+    
     @IBOutlet weak var label: UILabel!
     
     
@@ -57,28 +60,28 @@ class ViewController: UIViewController {
         result = ""
         curOperation = .Null
         label.text = "0"
+        
+        addCount = 1
+        addAvg = 0
     }
     
     @IBAction func equals(_ sender: UIButton) {
         operation(operation: curOperation)
+        addCount = 1
+        addAvg = 1
     }
-    
     @IBAction func add(_ sender: UIButton) {
         operation(operation: .Add)
     }
-    
     @IBAction func subtract(_ sender: UIButton) {
         operation(operation: .Subtract)
     }
-    
     @IBAction func multiply(_ sender: UIButton) {
         operation(operation: .Multiply)
     }
-    
     @IBAction func divide(_ sender: UIButton) {
         operation(operation: .Divide)
     }
-    
     @IBAction func mod(_ sender: UIButton) {
         operation(operation: .Mod)
     }
@@ -86,44 +89,64 @@ class ViewController: UIViewController {
     ///////////
     // multiOperants
     @IBAction func count(_ sender: UIButton) {
+        operation(operation: .Count)
+        addCount += 1
     }
-    
     @IBAction func avg(_ sender: UIButton) {
+        operation(operation: .Avg)
     }
-    
     @IBAction func fact(_ sender: UIButton) {
+        operation(operation: .Fact)
     }
-    
+
     func operation(operation: Operation) {
         if curOperation != .Null {
             if numbers != "" {
                 rValue = numbers
                 numbers = ""
                 
-                //start calculations
-                switch curOperation {
-                case .Add:
+                if curOperation == .Add {
                     result = "\(Double(lValue)! + Double(rValue)!)"
-                case .Subtract:
+                } else if curOperation == .Subtract {
                     result = "\(Double(lValue)! - Double(rValue)!)"
-                case .Multiply:
+                } else if curOperation == .Multiply {
                     result = "\(Double(lValue)! * Double(rValue)!)"
-                case .Divide:
+                } else if curOperation == .Divide {
                     result = "\(Double(lValue)! / Double(rValue)!)"
-                default: // .Mod
+                } else if curOperation == .Mod {
                     result = "\(Double(lValue)!.truncatingRemainder(dividingBy: Double(rValue)!))"
+                } else if curOperation == .Count {
+                    result = "\(addCount)"
                 }
+                
+//                //start calculations
+//                switch curOperation {
+//                case .Add:
+//                    result = "\(Double(lValue)! + Double(rValue)!)"
+//                case .Subtract:
+//                    result = "\(Double(lValue)! - Double(rValue)!)"
+//                case .Multiply:
+//                    result = "\(Double(lValue)! * Double(rValue)!)"
+//                case .Divide:
+//                    result = "\(Double(lValue)! / Double(rValue)!)"
+//                case .Mod:
+//                    result = "\(Double(lValue)!.truncatingRemainder(dividingBy: Double(rValue)!))"
+//                default: // .Count
+//                    result =
+//                }
+                
                 lValue = result //hold current result for next use
+                
                 if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
                     result = String(Int(Double(result)!))
                 }
-                
                 label.text = result
             }
             curOperation = operation
         } else {
             lValue = numbers
             numbers = ""
+            // if for count, avg, and fact here
             curOperation = operation // next time number is pressed, we can calculate it
         }
     }
