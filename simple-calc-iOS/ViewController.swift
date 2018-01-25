@@ -97,6 +97,27 @@ class ViewController: UIViewController {
     }
     @IBAction func fact(_ sender: UIButton) {
         operation(operation: .Fact)
+        if Int(lValue)! / 10 < 1 {
+            if Int(lValue)! == 0 || Int(lValue)! == 1 {
+                result = "1"
+            } else {
+                var num = Int(lValue)!
+                var total = 1
+                while num > 0 {
+                    total *= num
+                    num -= 1
+                }
+                result = "\(total)"
+            }
+        } else {
+            result = "0"
+            lValue = ""
+            label.text = "0"
+        }
+        label.text = result
+        lValue = result
+        numbers = ""
+        curOperation = .Null
     }
 
     func operation(operation: Operation) {
