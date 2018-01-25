@@ -34,7 +34,8 @@ class ViewController: UIViewController {
     var curOperation : Operation = .Null
     
     var addCount = 1
-    var addAvg = 0
+    var avgCount = 0
+    var addAvg : Double = 0
     
     @IBOutlet weak var label: UILabel!
     
@@ -62,13 +63,27 @@ class ViewController: UIViewController {
         label.text = "0"
         
         addCount = 1
+        avgCount = 0
         addAvg = 0
     }
     
     @IBAction func equals(_ sender: UIButton) {
-        operation(operation: curOperation)
-        addCount = 1
-        addAvg = 1
+        if curOperation == .Avg {
+            avgCount += 1 // tick forward
+//            if lValue != "" {
+//                addAvg += Double(lValue)!
+//            } else {
+//                addAvg += Double(rValue)!
+//            }
+            
+            result = "\((addAvg) / Double(avgCount))"
+            label.text = result
+            avgCount = 0
+            addAvg = 0
+            lValue = result
+        } else {
+            operation(operation: curOperation)
+        }
     }
     @IBAction func add(_ sender: UIButton) {
         operation(operation: .Add)
@@ -94,6 +109,12 @@ class ViewController: UIViewController {
     }
     @IBAction func avg(_ sender: UIButton) {
         operation(operation: .Avg)
+        if lValue != "" {
+            addAvg += Double(lValue)!
+        } else {
+            addAvg += Double(rValue)!
+        }
+        avgCount += 1
     }
     @IBAction func fact(_ sender: UIButton) {
         operation(operation: .Fact)
@@ -157,11 +178,12 @@ class ViewController: UIViewController {
 //                }
                 
                 lValue = result //hold current result for next use
-                
-                if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
-                    result = String(Int(Double(result)!))
+                if curOperation != .Avg {
+                    if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
+                        result = String(Int(Double(result)!))
+                    }
+                    label.text = result
                 }
-                label.text = result
             }
             curOperation = operation
         } else {
@@ -172,12 +194,9 @@ class ViewController: UIViewController {
         }
     }
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
