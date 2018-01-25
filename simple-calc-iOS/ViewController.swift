@@ -74,6 +74,7 @@ class ViewController: UIViewController {
 
             result = "\((addAvg) / Double(avgCount))"
             label.text = result
+            
             // reset Avg values
             avgCount = 0
             addAvg = 0
@@ -100,7 +101,7 @@ class ViewController: UIViewController {
     }
     
     ///////////
-    // multiOperants
+    // multiOperand
     @IBAction func count(_ sender: UIButton) {
         operation(operation: .Count)
         addCount += 1
@@ -135,8 +136,6 @@ class ViewController: UIViewController {
         }
         label.text = result
         lValue = result
-        numbers = ""
-        curOperation = .Null
     }
 
     func operation(operation: Operation) {
