@@ -29,44 +29,62 @@ class ViewController: UIViewController {
     
     var numbers = ""
     var lValue = ""
-    var rvalue = ""
+    var rValue = ""
     var result = ""
-    var operation : Operation = .Null
+    var curOperation : Operation = .Null
     
     @IBOutlet weak var label: UILabel!
     
     
     @IBAction func numbersPressed(_ sender: UIButton) {
-        numbers += "\(sender.tag)"
-        label.text = numbers
+        if numbers.count <= 8 {
+            numbers += "\(sender.tag)"
+            label.text = numbers
+        }
     }
     
     @IBAction func dot(_ sender: UIButton) {
-        numbers += "."
-        label.text = numbers
+        if numbers.count <= 7 {
+            numbers += "."
+            label.text = numbers
+        }
     }
     
     @IBAction func allClear(_ sender: UIButton) {
+        numbers = ""
+        lValue = ""
+        rValue = ""
+        result = ""
+        curOperation = .Null
+        label.text = "0"
     }
     
     @IBAction func equals(_ sender: UIButton) {
+        operation(operation: curOperation)
     }
     
     @IBAction func add(_ sender: UIButton) {
+        operation(operation: .Add)
     }
     
     @IBAction func subtract(_ sender: UIButton) {
+        operation(operation: .Subtract)
     }
     
     @IBAction func multiply(_ sender: UIButton) {
+        operation(operation: .Multiply)
     }
     
     @IBAction func divide(_ sender: UIButton) {
+        operation(operation: .Divide)
     }
     
     @IBAction func mod(_ sender: UIButton) {
+        operation(operation: .Mod)
     }
     
+    ///////////
+    // multiOperants
     @IBAction func count(_ sender: UIButton) {
     }
     
@@ -76,7 +94,39 @@ class ViewController: UIViewController {
     @IBAction func fact(_ sender: UIButton) {
     }
     
-    
+    func operation(operation: Operation) {
+        if curOperation != .Null {
+            if numbers != "" {
+                rValue = numbers
+                numbers = ""
+                
+                //start calculations
+                switch curOperation {
+                case .Add:
+                    result = "\(Double(lValue)! + Double(rValue)!)"
+                case .Subtract:
+                    result = "\(Double(lValue)! - Double(rValue)!)"
+                case .Multiply:
+                    result = "\(Double(lValue)! * Double(rValue)!)"
+                case .Divide:
+                    result = "\(Double(lValue)! / Double(rValue)!)"
+                default: // .Mod
+                    result = "\(Double(lValue)!.truncatingRemainder(dividingBy: Double(rValue)!))"
+                }
+                lValue = result //hold current result for next use
+                if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
+                    result = String(Int(Double(result)!))
+                }
+                
+                label.text = result
+            }
+            curOperation = operation
+        } else {
+            lValue = numbers
+            numbers = ""
+            curOperation = operation // next time number is pressed, we can calculate it
+        }
+    }
     
     
     override func didReceiveMemoryWarning() {
