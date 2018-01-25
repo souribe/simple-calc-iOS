@@ -70,21 +70,19 @@ class ViewController: UIViewController {
     @IBAction func equals(_ sender: UIButton) {
         if curOperation == .Avg {
             avgCount += 1 // tick forward
-//            if lValue != "" {
-//                addAvg += Double(lValue)!
-//            } else {
-//                addAvg += Double(rValue)!
-//            }
-            
+            addAvg += Double(numbers)!
+
             result = "\((addAvg) / Double(avgCount))"
             label.text = result
+            // reset Avg values
             avgCount = 0
             addAvg = 0
-            lValue = result
+            lValue = result // keep result for next calculations
         } else {
             operation(operation: curOperation)
         }
     }
+    
     @IBAction func add(_ sender: UIButton) {
         operation(operation: .Add)
     }
