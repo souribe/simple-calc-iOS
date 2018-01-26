@@ -39,7 +39,6 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var label: UILabel!
     
-    
     @IBAction func numbersPressed(_ sender: UIButton) {
         if numbers.count <= 8 {
             numbers += "\(sender.tag)"
@@ -110,39 +109,51 @@ class ViewController: UIViewController {
         operation(operation: .Avg)
         if lValue != "" {
             addAvg += Double(lValue)!
-        } else {
+        } else  if rValue != "" {
             addAvg += Double(rValue)!
+        } else {
+            avgCount -= 1 // resets the +1 when nothing is inputted
         }
         avgCount += 1
     }
     @IBAction func fact(_ sender: UIButton) {
         operation(operation: .Fact)
-        if Int(lValue)! / 10 < 1 {
+        if numbers == "" && lValue == "" && rValue == "" {
+            result = ""
+            label.text = "result"
+            curOperation = .Null
+        } else {
             if Int(lValue)! == 0 || Int(lValue)! == 1 {
                 result = "1"
             } else {
-                var num = Int(lValue)!
-                var total = 1
-                while num > 0 {
-                    total *= num
-                    num -= 1
+                if Int(Double(lValue)!) / 10 < 1 { // make into double first, then int to avoid exception
+                    var num = Int(lValue)!
+                    var total = 1
+                    while num > 0 {
+                        total *= num
+                        num -= 1
+                    }
+                    result = "\(total)"
+                } else {
+                    result = "0"
+                    lValue = ""
+                    label.text = "0"
                 }
-                result = "\(total)"
+                label.text = result
+                //lValue = result
+                lValue = ""
+                numbers = ""
+                curOperation = .Null
             }
-        } else {
-            result = "0"
-            lValue = ""
-            label.text = "0"
         }
-        label.text = result
-        lValue = result
     }
 
     func operation(operation: Operation) {
         if curOperation != .Null {
-            if numbers != "" {
+            if numbers != "" && lValue != "" {
                 rValue = numbers
                 numbers = ""
+                
                 
                 if curOperation == .Add {
                     result = "\(Double(lValue)! + Double(rValue)!)"
@@ -157,23 +168,6 @@ class ViewController: UIViewController {
                 } else if curOperation == .Count {
                     result = "\(addCount)"
                 }
-                
-//                //start calculations
-//                switch curOperation {
-//                case .Add:
-//                    result = "\(Double(lValue)! + Double(rValue)!)"
-//                case .Subtract:
-//                    result = "\(Double(lValue)! - Double(rValue)!)"
-//                case .Multiply:
-//                    result = "\(Double(lValue)! * Double(rValue)!)"
-//                case .Divide:
-//                    result = "\(Double(lValue)! / Double(rValue)!)"
-//                case .Mod:
-//                    result = "\(Double(lValue)!.truncatingRemainder(dividingBy: Double(rValue)!))"
-//                default: // .Count
-//                    result =
-//                }
-                
                 lValue = result //hold current result for next use
                 if curOperation != .Avg {
                     if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
@@ -182,11 +176,14 @@ class ViewController: UIViewController {
                     label.text = result
                 }
             }
+            if numbers != "" && lValue == "" { // fixes if operants(basic) are pressed first
+                lValue = numbers
+                numbers = ""
+            }
             curOperation = operation
         } else {
             lValue = numbers
             numbers = ""
-            // if for count, avg, and fact here
             curOperation = operation // next time number is pressed, we can calculate it
         }
     }
