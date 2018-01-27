@@ -64,25 +64,33 @@ class ViewController: UIViewController {
         curOperation = .Null
         label.text = "0"
         
-        addCount = 1
+        addCount = 0
         avgCount = 0
         addAvg = 0
     }
     
     @IBAction func equals(_ sender: UIButton) {
-        if curOperation == .Avg {
-            avgCount += 1 // tick forward
-            addAvg += Double(numbers)!
-            
-            result = "\((addAvg) / Double(avgCount))"
-            label.text = result
-            
-            // reset Avg values
-            avgCount = 0
-            addAvg = 0
-            lValue = result // keep result for next calculations
-        } else {
-            operation(operation: curOperation)
+        if numbers != "" {
+            if curOperation == .Count {
+                addCount += 1 //  tick forward
+                result = "\(addCount)"
+                label.text = result //checkTrunc(result: result) // check truncated
+                lValue = result
+            }
+            if curOperation == .Avg {
+                avgCount += 1 // tick forward
+                addAvg += Double(numbers)!
+                result = "\((addAvg) / Double(avgCount))"
+                
+                label.text = checkTrunc(result: result)
+                
+                // reset Avg values
+                avgCount = 0
+                addAvg = 0
+                lValue = result // keep result for next calculations
+            } else {
+                operation(operation: curOperation)
+            }
         }
     }
     
@@ -105,8 +113,10 @@ class ViewController: UIViewController {
     ///////////
     // multiOperand
     @IBAction func count(_ sender: UIButton) {
+        if numbers != "" {
+            addCount += 1
+        }
         operation(operation: .Count)
-        addCount += 1
     }
     @IBAction func avg(_ sender: UIButton) {
         operation(operation: .Avg)
@@ -138,14 +148,10 @@ class ViewController: UIViewController {
                     result = "\(total)"
                 } else {
                     result = "0"
-//                    lValue = ""
-//                    label.text = "0"
                 }
             }
             label.text = result
             lValue = result
-            //lValue = ""
-            //numbers = ""
         }
         curOperation = .Null
     }
@@ -155,7 +161,6 @@ class ViewController: UIViewController {
             if numbers != "" && lValue != "" && numbers != "." {
                 rValue = numbers
                 numbers = ""
-                
                 
                 if curOperation == .Add {
                     result = "\(Double(lValue)! + Double(rValue)!)"
@@ -167,19 +172,20 @@ class ViewController: UIViewController {
                     result = "\(Double(lValue)! / Double(rValue)!)"
                 } else if curOperation == .Mod {
                     result = "\(Double(lValue)!.truncatingRemainder(dividingBy: Double(rValue)!))"
-                } else if curOperation == .Count {
-                    result = "\(addCount)"
                 }
+//                else if curOperation == .Count {
+//                    result = "\(addCount)"
+//                }
                 lValue = result //hold current result for next use
-                if curOperation != .Avg {
-                    if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
-                        result = String(Int(Double(result)!))
-                    }
+                if curOperation != .Avg && curOperation != .Count {
+                    
+                    // check truncating
+                    result = checkTrunc(result: result)
                     label.text = result
                 }
             }
             
-            if numbers != "." {
+            if numbers != "." { // Handles dots
                 if numbers != "" && lValue == "" { // fixes if operants(basic) are pressed first
                     lValue = numbers
                     numbers = ""
@@ -196,6 +202,14 @@ class ViewController: UIViewController {
             }
             curOperation = operation
         }
+    }
+    
+    // Helper function to check if there are remainders that need to be removed (0)
+    private func checkTrunc(result: String) -> String {
+        if (Double(result)!.truncatingRemainder(dividingBy: 1) == 0) { // check for remainder of 0 (integer)
+            return String(Int(Double(result)!))
+        }
+        return result
     }
     
     override func didReceiveMemoryWarning() {
