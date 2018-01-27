@@ -48,9 +48,11 @@ class ViewController: UIViewController {
     
     @IBAction func dot(_ sender: UIButton) {
         ////contains method
-        if numbers.count <= 7 {
-            numbers += "."
-            label.text = numbers
+        if !(label.text?.contains("."))! && !numbers.contains(".") {
+            if numbers.count <= 7 {
+                numbers += "."
+                label.text = numbers
+            }
         }
     }
     
