@@ -74,15 +74,14 @@ class ViewController: UIViewController {
             if curOperation == .Count {
                 addCount += 1 //  tick forward
                 result = "\(addCount)"
-                label.text = result //checkTrunc(result: result) // check truncated
+                label.text = result
                 lValue = result
             }
             if curOperation == .Avg {
                 avgCount += 1 // tick forward
                 addAvg += Double(numbers)!
                 result = "\((addAvg) / Double(avgCount))"
-                
-                label.text = checkTrunc(result: result)
+                label.text = checkTrunc(result: result) //checkTrunc(result: result) // check truncated
                 
                 // reset Avg values
                 avgCount = 0
@@ -138,7 +137,7 @@ class ViewController: UIViewController {
             if Int(Double(lValue)!) == 0 || Int(Double(lValue)!) == 1 {
                 result = "1"
             } else {
-                if Int(Double(lValue)!) / 10 < 1 { // make into double first, then int to avoid exception
+                if Int(Double(lValue)!) >= 1 { // make into double first, then int to avoid exception
                     var num = Int(lValue)!
                     var total = 1
                     while num > 0 {
