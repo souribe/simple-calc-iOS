@@ -21,7 +21,7 @@ enum Operation : String {
 }
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         //label.text = "0" // changes text to 0
@@ -47,6 +47,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func dot(_ sender: UIButton) {
+        ////contains method
         if numbers.count <= 7 {
             numbers += "."
             label.text = numbers
@@ -70,7 +71,7 @@ class ViewController: UIViewController {
         if curOperation == .Avg {
             avgCount += 1 // tick forward
             addAvg += Double(numbers)!
-
+            
             result = "\((addAvg) / Double(avgCount))"
             label.text = result
             
@@ -118,12 +119,11 @@ class ViewController: UIViewController {
     }
     @IBAction func fact(_ sender: UIButton) {
         operation(operation: .Fact)
-        if numbers == "" && lValue == "" && rValue == "" {
+        if numbers == "" && lValue == "" && rValue == "" { // if fact is pressed first
             result = ""
-            label.text = "result"
-            curOperation = .Null
+            label.text = "0"
         } else {
-            if Int(lValue)! == 0 || Int(lValue)! == 1 {
+            if Int(Double(lValue)!) == 0 || Int(Double(lValue)!) == 1 {
                 result = "1"
             } else {
                 if Int(Double(lValue)!) / 10 < 1 { // make into double first, then int to avoid exception
@@ -136,21 +136,21 @@ class ViewController: UIViewController {
                     result = "\(total)"
                 } else {
                     result = "0"
-                    lValue = ""
-                    label.text = "0"
+//                    lValue = ""
+//                    label.text = "0"
                 }
-                label.text = result
-                //lValue = result
-                lValue = ""
-                numbers = ""
-                curOperation = .Null
             }
+            label.text = result
+            lValue = result
+            //lValue = ""
+            //numbers = ""
         }
+        curOperation = .Null
     }
-
+    
     func operation(operation: Operation) {
         if curOperation != .Null {
-            if numbers != "" && lValue != "" {
+            if numbers != "" && lValue != "" && numbers != "." {
                 rValue = numbers
                 numbers = ""
                 
@@ -176,15 +176,23 @@ class ViewController: UIViewController {
                     label.text = result
                 }
             }
-            if numbers != "" && lValue == "" { // fixes if operants(basic) are pressed first
-                lValue = numbers
-                numbers = ""
+            
+            if numbers != "." {
+                if numbers != "" && lValue == "" { // fixes if operants(basic) are pressed first
+                    lValue = numbers
+                    numbers = ""
+                }
             }
             curOperation = operation
         } else {
-            lValue = numbers
-            numbers = ""
-            curOperation = operation // next time number is pressed, we can calculate it
+            if numbers != "." {
+                lValue = numbers
+                numbers = ""
+                 // next time number is pressed, we can calculate it
+            } else {
+                numbers = ""
+            }
+            curOperation = operation
         }
     }
     
@@ -193,4 +201,3 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 }
-
