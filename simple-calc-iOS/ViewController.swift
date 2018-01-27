@@ -172,18 +172,14 @@ class ViewController: UIViewController {
                 } else if curOperation == .Mod {
                     result = "\(Double(lValue)!.truncatingRemainder(dividingBy: Double(rValue)!))"
                 }
-//                else if curOperation == .Count {
-//                    result = "\(addCount)"
-//                }
+
                 lValue = result //hold current result for next use
                 if curOperation != .Avg && curOperation != .Count {
-                    
                     // check truncating
                     result = checkTrunc(result: result)
                     label.text = result
                 }
             }
-            
             if numbers != "." { // Handles dots
                 if numbers != "" && lValue == "" { // fixes if operants(basic) are pressed first
                     lValue = numbers
