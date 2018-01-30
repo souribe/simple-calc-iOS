@@ -130,6 +130,7 @@ class ViewController: UIViewController {
     }
     @IBAction func fact(_ sender: UIButton) {
         operation(operation: .Fact)
+        var big = false
         if numbers == "" && lValue == "" && rValue == "" { // if fact is pressed first
             result = ""
             label.text = "0"
@@ -138,18 +139,26 @@ class ViewController: UIViewController {
                 result = "1"
             } else {
                 if Int(Double(lValue)!) >= 1 { // make into double first, then int to avoid exception
-                    var num = Int(lValue)!
-                    var total = 1
-                    while num > 0 {
-                        total *= num
-                        num -= 1
+                    if Int(Double(lValue)!) <= 20 {
+                        var num = Int(Double(lValue)!)
+                        var total = 1
+                        while num > 0 {
+                            total *= num
+                            num -= 1
+                        }
+                        result = "\(total)"
+                    } else {
+                        result = "too big"
+                        big = true
                     }
-                    result = "\(total)"
                 } else {
                     result = "0"
                 }
             }
             label.text = result
+            if big == true {
+                result = "0"
+            }
             lValue = result
         }
         curOperation = .Null
