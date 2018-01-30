@@ -140,6 +140,7 @@ class ViewController: UIViewController {
             } else {
                 if Int(Double(lValue)!) >= 1 { // make into double first, then int to avoid exception
                     if Int(Double(lValue)!) <= 20 {
+
                         var num = Int(Double(lValue)!)
                         var total = 1
                         while num > 0 {
