@@ -139,19 +139,24 @@ class ViewController: UIViewController {
                 result = "1"
             } else {
                 if Int(Double(lValue)!) >= 1 { // make into double first, then int to avoid exception
-                    if Int(Double(lValue)!) <= 20 {
+                    //if Int(Double(lValue)!) <= 20 {
 
-                        var num = Int(Double(lValue)!)
-                        var total = 1
+                        var num = Double(lValue)!
+                        var total = 1.0
                         while num > 0 {
                             total *= num
                             num -= 1
                         }
                         result = "\(total)"
-                    } else {
-                        result = "too big"
-                        big = true
-                    }
+                        result = checkTrunc(result: result)
+                        if result == "inf" {
+                            big = true
+                        }
+                    
+//                    } else {
+//                        result = "too big"
+//                        big = true
+//                    }
                 } else {
                     result = "0"
                 }
